@@ -48,14 +48,18 @@ To be included
 
 ## 📁 Folder Structure
 
+## 📁 Project Structure
+
+```text
 MobileRobotROS2/
-├── stm32_firmware/ # RTOS project for motor & sensor control
-├── rpi_vision_node/ # ROS 2 node for image processing
-├── pc_gui/ # PC interface to control the robot
-├── launch/ # ROS 2 launch files
-├── config/ # Parameter/config files
-├── assets/ # Diagrams and system photos
-└── README.md # Project documentation
+├── stm32_firmware/      # RTOS-based firmware for motor control and sensor acquisition
+├── rpi_vision_node/     # ROS 2 node for image capture and processing on Raspberry Pi
+├── pc_gui/              # Graphical user interface for PC control and monitoring
+├── launch/              # ROS 2 launch files for system orchestration
+├── config/              # Configuration and parameter files
+├── assets/              # System diagrams and reference photos
+└── README.md            # Project documentation (this file)
+```
 
 ## 📚 License
 
