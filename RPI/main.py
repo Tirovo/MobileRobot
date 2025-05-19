@@ -15,7 +15,7 @@ def main():
     elif sys.argv[1] == "I":
         image.image_process(sys.argv)
     elif sys.argv[1] == "V":
-        video.display_video()()
+        video.display_video()
     else:
         print("!!! First parameter : B/I/V !!!")
 
