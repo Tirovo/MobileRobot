@@ -1,5 +1,12 @@
 import cv2
 import numpy as np
+import sys
+import threading
+
+import rclpy
+sys.path.append('/home/rpi/ros2_ws/src/py_pubsub/py_pubsub')
+from publisher_member_function import MinimalPublisher
+
 
 def red_detect(frame):
     nb_pixels = 0
@@ -33,6 +40,9 @@ def red_detect(frame):
     cv2.imshow("Capture - Red Detection", frame)
     cv2.imshow("Red Mask", mask)
 
+    return object_pos
+
+
 def sharpen(my_image):
     # Vérifie que l’image est bien en 8 bits
     if my_image.dtype != np.uint8:
@@ -55,8 +65,16 @@ def sharpen(my_image):
 
     cv2.imshow("Sharpen", result)
 
+
 def display_video():
-    cap = cv2.VideoCapture(0)  # "/dev/video0" = webcam 0
+    cap = cv2.VideoCapture(0)  # Webcam 0
+
+    rclpy.init()
+    publisher = MinimalPublisher()
+
+    # Lancer le spin ROS2 dans un thread à part
+    spin_thread = threading.Thread(target=rclpy.spin, args=(publisher,), daemon=True)
+    spin_thread.start()
 
     if not cap.isOpened():
         print("Erreur : caméra non détectée.")
@@ -68,13 +86,14 @@ def display_video():
             print(" --(!) No captured frame -- Break!")
             break
 
-        cv2.imshow("Capture", frame)
-        red_detect(frame)
-        # sharpen(frame)  # Active si besoin
+        barycentre = red_detect(frame)
+        publisher.send(barycentre[0], barycentre[1])
 
         if cv2.waitKey(10) & 0xFF == ord('c'):
             break
 
     cap.release()
+    publisher.destroy_node()
+    rclpy.shutdown()
     cv2.destroyAllWindows()
     return 0
